@@ -6,33 +6,6 @@ import candleData from "./chartData";
 
 const TradingChart = () => {
     const chartContainerRef = useRef();
-    // const [lines, setLines] = useState([]);
-    // const [startPoint, setStartPoint] = useState(null);
-
-    // const handleClick = (e) => {
-    //     const rect = e.currentTarget.getBoundingClientRect();
-
-    //     const point = {
-    //         x: e.clientX - rect.left,
-    //         y: e.clientY - rect.top,
-    //     };
-
-    //     if (!startPoint) {
-    //         setStartPoint(point);
-    //         return;
-    //     }
-
-    //     const newLine = {
-    //         id: Date.now(),
-    //         x1: startPoint.x,
-    //         y1: startPoint.y,
-    //         x2: point.x,
-    //         y2: point.y,
-    //     };
-
-    //     setLines((prev) => [...prev, newLine]);
-    //     setStartPoint(null);
-    // };
 
     useEffect(() => {
         const chart = createChart(chartContainerRef.current, {
