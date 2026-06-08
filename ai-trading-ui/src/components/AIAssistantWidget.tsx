@@ -115,11 +115,8 @@ export default function AIChartWorkspace() {
 
         {/* Chart Area */}
 
-         {/* <div
-            ref={chartContainerRef}
-            className="w-full"
-        /> */}
-
+      
+{/* 
         <div className="flex-1 relative overflow-hidden bg-background">
           {layout === 'single' ? (
             <MockCandlestickChart />
@@ -131,13 +128,13 @@ export default function AIChartWorkspace() {
               <div className="bg-background"><MockCandlestickChart symbol="ETH/USD" hideAxes /></div>
             </div>
           )}
-        </div>
-      </div>
+        </div>*/}
+      </div> 
 
       {/* Right Watchlist */}
-      <div className="w-[280px] h-full hidden lg:block shrink-0 bg-card/40">
+      {/* <div className="w-[280px] h-full hidden lg:block shrink-0 bg-card/40">
         <WatchlistPanel />
-      </div>
+      </div> */}
     </div>
   );
 }

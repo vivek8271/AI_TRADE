@@ -201,10 +201,11 @@ export default function AIAssistantWidget() {
               <MockCandlestickChart />
             ) : (
               <div className="grid grid-cols-2 grid-rows-2 h-full gap-px bg-border">
-                <div className="bg-background"><MockCandlestickChart symbol="NIFTY 50" hideAxes /></div>
-                <div className="bg-background"><MockCandlestickChart symbol="BTC/USD" hideAxes /></div>
-                <div className="bg-background"><MockCandlestickChart symbol="RELIANCE" hideAxes /></div>
-                <div className="bg-background"><MockCandlestickChart symbol="ETH/USD" hideAxes /></div>
+                <div className="bg-background"><MockCandlestickChart /></div>
+                <div className="bg-background"><MockCandlestickChart/></div>
+                <div className="bg-background"><MockCandlestickChart /></div>
+                <div className="bg-background"><MockCandlestickChart /></div>
+    
               </div>
             )}
           </div>
@@ -282,7 +283,7 @@ export default function AIAssistantWidget() {
       {ReactDOM.createPortal(chartPanel, document.body)}
       {ReactDOM.createPortal(chatPanel, document.body)}
 
-      {/* Terminal icon → opens chart */}
+      {/* Terminal icon → opens INDEX chart */}
       <div className="fixed bottom-6 right-[5.5rem] z-[99998]">
         <motion.button
           whileHover={{ scale: 1.08 }}
@@ -293,13 +294,13 @@ export default function AIAssistantWidget() {
               ? 'bg-destructive/80 text-white'
               : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/40'
           }`}
-          title="AI Chart"
+          title="Index Chart"
         >
           {chart.isOpen ? <X className="w-5 h-5" /> : <TerminalSquare className="w-5 h-5" />}
         </motion.button>
       </div>
 
-      {/* Sparkle → opens chat */}
+      {/* Sparkle → opens AI chat */}
       <motion.button
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.93 }}
