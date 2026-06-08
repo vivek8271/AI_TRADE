@@ -202,7 +202,7 @@ export default function MockCandlestickChart() {
         },
       }
     );
-    // chart.timeScale().fitContent();
+    chart.timeScale().fitContent();
 
     const candleSeries =
       chart.addSeries(CandlestickSeries);
