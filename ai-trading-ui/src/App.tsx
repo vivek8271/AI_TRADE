@@ -13,7 +13,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Backtesting from "./pages/Backtesting";
 import CommandPalette from "./components/CommandPalette";
-import AIAssistantWidget from "./components/AIAssistantWidget";
+import AIAssistantWidget from "./components/AIChartWorkspace";
 import { ThemeContext } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
