@@ -46,30 +46,6 @@ export default function MockCandlestickChart() {
     return () => chart.remove();
   }, []);
 
-//   useEffect(() => {
-//     if (!chartContainerRef.current) return;
-
-//     const container = chartContainerRef.current;
-
-//     const chart = createChart(container, {
-//         width: container.clientWidth,
-//         height: container.clientHeight,
-//     });
-
-//     const resizeObserver = new ResizeObserver(() => {
-//         chart.applyOptions({
-//             width: container.clientWidth,
-//             height: container.clientHeight,
-//         });
-//     });
-
-//     resizeObserver.observe(container);
-
-//     return () => {
-//         resizeObserver.disconnect();
-//         chart.remove();
-//     };
-// }, []);
 
   return (
     <div
