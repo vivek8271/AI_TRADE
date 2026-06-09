@@ -8,7 +8,7 @@ import { createChart, CandlestickSeries } from "lightweight-charts";
 // import candleData from "./chartData";
 
 
-export default function AIChartWorkspace() {
+export default function AIAssistantWidget() {
   const [timeframe, setTimeframe] = useState('15m');
   const [layout, setLayout] = useState('single');
 

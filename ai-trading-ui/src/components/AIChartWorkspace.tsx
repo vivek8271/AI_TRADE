@@ -109,7 +109,7 @@ function ResizeGrip({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => voi
   );
 }
 
-export default function AIAssistantWidget() {
+export default function AIChartWorkspace() {
   /* Chart panel */
   const chart = useFloatingPanel(860, 540);
   const [timeframe, setTimeframe] = useState('15m');
