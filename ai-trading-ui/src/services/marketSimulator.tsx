@@ -1,11 +1,52 @@
 import { generateCandles } from "../data/candleGenerator";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createChart, CandlestickSeries } from "lightweight-charts";
+import type { TrendLine, Point } from "@/components/types/drawing";
 
 export default function MarketSimulator() {
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
+  const [trendLines, setTrendLines] =
+    useState<TrendLine[]>([]);
+
+  const [startPoint, setStartPoint] =
+    useState<Point | null>(null);
+
+  const handleClick = (
+    e: React.MouseEvent<SVGSVGElement>
+  ) => {
+    console.log("clicked");
+    const rect =
+      e.currentTarget.getBoundingClientRect();
+
+    const point = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+
+    if (!startPoint) {
+      setStartPoint(point);
+      return;
+    }
+
+    const newLine: TrendLine = {
+      id: crypto.randomUUID(),
+      start: startPoint,
+      end: point,
+      createdBy: "user",
+    };
+
+    setTrendLines((prev) => [
+      ...prev,
+      newLine,
+    ]);
+
+    setStartPoint(null);
+  };
+
   useEffect(() => {
+
+
     if (!chartContainerRef.current) return;
 
     const container = chartContainerRef.current;
@@ -15,20 +56,20 @@ export default function MarketSimulator() {
       height: container.clientHeight,
 
       layout: {
-          background: {
-            color: 'transparent'
-          },
-          textColor: "#ffffff",
+        background: {
+          color: 'transparent'
         },
-        
-        grid: {
-          vertLines: {
-            color: "#1c1d1f",
-          },
-          horzLines: {
-            color: "#1c1d1f",
-          },
+        textColor: "#ffffff",
+      },
+
+      grid: {
+        vertLines: {
+          color: "#1c1d1f",
         },
+        horzLines: {
+          color: "#1c1d1f",
+        },
+      },
     });
 
     const candleSeries = chart.addSeries(CandlestickSeries);
@@ -102,11 +143,43 @@ export default function MarketSimulator() {
     }, 1000);
 
     return () => {
-      // resizeObserver.disconnect();
+      resizeObserver.disconnect();
       clearInterval(interval);
       chart.remove();
     };
   }, []);
 
-  return <div ref={chartContainerRef} className="w-full h-full" />;
+  // return <div ref={chartContainerRef} className="w-full h-full" />;
+
+  return (
+    <div className="relative w-full h-full">
+      <div
+        ref={chartContainerRef}
+        className="w-full h-full"
+      />
+
+      <svg
+        className="absolute inset-0 w-full h-full"
+        onClick={handleClick}
+        style={{
+          background: "rgba(233, 207, 207, 0.1)",
+          pointerEvents: "none",
+           zIndex: 9999,
+        }}
+      >
+        {trendLines.map((line) => (
+          <line
+            key={line.id}
+            x1={line.start.x}
+            y1={line.start.y}
+            x2={line.end.x}
+            y2={line.end.y}
+            stroke="#FFD700"
+            strokeWidth={2}
+          ></line>
+        ))}
+
+      </svg>
+    </div>
+  )
 }
