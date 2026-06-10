@@ -2,10 +2,22 @@ import { generateCandles } from "../data/candleGenerator";
 import { useEffect, useRef, useState } from "react";
 import { createChart, CandlestickSeries } from "lightweight-charts";
 import type { TrendLine, Point } from "@/components/types/drawing";
+import type { Tool } from "@/components/types/tool";
 
-export default function MarketSimulator() {
+interface Props {
+  activeTool: Tool;
+}
+
+export default function MarketSimulator({ activeTool }: Props) {
+
+  useEffect(() => {
+      console.log(
+        "MarketSimulator received:",
+        activeTool
+      );
+    }, [activeTool]);
   const chartContainerRef = useRef<HTMLDivElement>(null);
-
+ 
   const [trendLines, setTrendLines] =
     useState<TrendLine[]>([]);
 
@@ -15,7 +27,17 @@ export default function MarketSimulator() {
   const handleClick = (
     e: React.MouseEvent<SVGSVGElement>
   ) => {
+    // if (activeTool !== "trendline")
+    //   return;
     console.log("clicked");
+    // useEffect(() => {
+    //   console.log(
+    //     "MarketSimulator received:",
+    //     activeTool
+    //   );
+    // }, [activeTool]);
+    // if (activeTool !== "trendline")
+    //   return;
     const rect =
       e.currentTarget.getBoundingClientRect();
 
@@ -161,11 +183,13 @@ export default function MarketSimulator() {
       <svg
         className="absolute inset-0 w-full h-full"
         onClick={handleClick}
-        style={{
-          background: "rgba(233, 207, 207, 0.1)",
-          pointerEvents: "none",
-           zIndex: 9999,
-        }}
+      style={{
+        zIndex: 999,
+        pointerEvents:
+          activeTool === "trendline"
+            ? "auto"
+            : "none",
+      }}
       >
         {trendLines.map((line) => (
           <line

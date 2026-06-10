@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import MockCandlestickChart from './MockCandlestickChart';
 import MarketSimulator from '../services/marketSimulator';
-
+import type { Tool } from './types/tool';
 
 /* ── Shared floating panel hook ── */
 function useFloatingPanel(defaultW: number, defaultH: number) {
@@ -111,17 +111,59 @@ function ResizeGrip({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => voi
   );
 }
 
+// const tools = [
+//   {
+//     icon: TrendingUp,
+//     tool: "trendline",
+//   },
+//   {
+//     icon: Minus,
+//     tool: "horizontalLine",
+//   },
+//   {
+//     icon: Square,
+//     tool: "rectangle",
+//   },
+//   {
+//     icon: Type,
+//     tool: "text",
+//   },
+// ];
+
+const tools: {
+  icon: React.ElementType;
+  tool: Tool;
+}[] = [
+  {
+    icon: TrendingUp,
+    tool: "trendline",
+  },
+  {
+    icon: Minus,
+    tool: "horizontalLine",
+  },
+  {
+    icon: Square,
+    tool: "rectangle",
+  },
+  {
+    icon: Type,
+    tool: "text",
+  },
+];
+
 export default function AIAssistantWidget() {
   /* Chart panel */
   const chart = useFloatingPanel(860, 540);
   const [timeframe, setTimeframe] = useState('15m');
   const [layout, setLayout] = useState<'single' | 'grid'>('single');
+  const [activeTool, setActiveTool] = useState<Tool>('cursor');
 
   /* Chat panel */
   const chat = useFloatingPanel(360, 420);
   const [message, setMessage] = useState('');
 
-  
+
 
   /* ── Chart panel ── */
   const chartPanel = (
@@ -183,9 +225,23 @@ export default function AIAssistantWidget() {
               </div> */}
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-0.5 bg-background rounded border border-border p-0.5">
-                {[TrendingUp, Minus, Square, Divide, Type].map((Icon, i) => (
+                {/* {[TrendingUp, Minus, Square, Divide, Type].map((Icon, i) => (
                   <Button key={i} variant="ghost" size="icon" className="w-6 h-6 text-muted-foreground hover:text-foreground">
                     <Icon className="w-3.5 h-3.5" />
+                  </Button>
+                ))} */}
+
+                {tools.map(({ icon: Icon, tool }) => (
+                  <Button
+                    key={tool}
+                    onClick={() => setActiveTool(tool)}
+                    variant={
+                      activeTool === tool
+                        ? "default"
+                        : "ghost"
+                    }
+                  >
+                    <Icon />
                   </Button>
                 ))}
               </div>
@@ -204,7 +260,7 @@ export default function AIAssistantWidget() {
           <div className="flex-1 relative overflow-hidden bg-background">
             {layout === 'single' ? (
               // <MockCandlestickChart />
-              <MarketSimulator />
+              <MarketSimulator activeTool={activeTool} />
             ) : (
               <div className="grid grid-cols-2 grid-rows-2 h-full gap-px bg-border">
                 <div className="bg-background"><MockCandlestickChart /></div>
