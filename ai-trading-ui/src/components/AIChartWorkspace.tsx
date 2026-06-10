@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import MockCandlestickChart from './MockCandlestickChart';
-
+import MarketSimulator from '../services/marketSimulator';
 /* ── Shared floating panel hook ── */
 function useFloatingPanel(defaultW: number, defaultH: number) {
   const [isOpen, setIsOpen] = useState(false);
@@ -128,7 +128,7 @@ export default function AIAssistantWidget() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.94 }}
           transition={{ duration: 0.15 }}
-          className="bg-card border border-border/80 shadow-2xl overflow-hidden flex flex-col"
+          className="bg-card border border-border/80 shadow-2xl overflow-auto flex flex-col"
           style={chart.panelStyle(chart.isMaximized, chart.pos, chart.size)}
         >
           {/* Title / drag bar */}
@@ -198,7 +198,8 @@ export default function AIAssistantWidget() {
           {/* Chart */}
           <div className="flex-1 relative overflow-hidden bg-background">
             {layout === 'single' ? (
-              <MockCandlestickChart />
+              // <MockCandlestickChart />
+              <MarketSimulator />
             ) : (
               <div className="grid grid-cols-2 grid-rows-2 h-full gap-px bg-border">
                 <div className="bg-background"><MockCandlestickChart /></div>
