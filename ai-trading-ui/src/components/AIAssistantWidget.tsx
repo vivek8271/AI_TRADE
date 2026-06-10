@@ -25,15 +25,6 @@ export default function AIAssistantWidget() {
   //                 },
   //                 textColor: "#ffffff",
   //             },
-  
-  //             grid: {
-  //                 vertLines: {
-  //                     color: "#37393d",
-  //                 },
-  //                 horzLines: {
-  //                     color: "#282a2e",
-  //                 },
-  //             },
   //         });
   
   //         const candlestickSeries = chart.addSeries(
