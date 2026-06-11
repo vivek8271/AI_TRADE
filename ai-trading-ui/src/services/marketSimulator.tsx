@@ -9,12 +9,18 @@ interface Props {
   timeframe: Timeframe;
 }
 
+
 export default function MarketSimulator({ activeTool, timeframe }: Props) {
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   const [trendLines, setTrendLines] =
     useState<TrendLine[]>([]);
+  // const [drawings, setDrawings] =
+  //   useState<Drawing[]>([]);
+
+  const [mousePoint, setMousePoint] =
+    useState<Point | null>(null);
 
   const [startPoint, setStartPoint] =
     useState<Point | null>(null);
@@ -44,6 +50,17 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
       end: point,
       createdBy: "user",
     };
+    // const newLine: TrendLine = {
+    //   id: crypto.randomUUID(),
+    //   type: "trendline",
+
+    //   start: startPoint,
+    //   end: point,
+
+    //   selected: false,
+
+    //   createdBy: "user",
+    // };
 
     setTrendLines((prev) => [
       ...prev,
@@ -194,6 +211,16 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
               ? "auto"
               : "none",
         }}
+
+        onMouseMove={(e) => {
+          const rect =
+            e.currentTarget.getBoundingClientRect();
+
+          setMousePoint({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top,
+          });
+        }}
       >
         {trendLines.map((line) => (
           <line
@@ -206,6 +233,20 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
             strokeWidth={2}
           ></line>
         ))}
+
+        {startPoint && mousePoint &&
+          activeTool === "trendline" && (
+            <line
+              x1={startPoint.x}
+              y1={startPoint.y}
+              x2={mousePoint.x}
+              y2={mousePoint.y}
+              stroke="#FFD700"
+              strokeDasharray="5 5"
+              strokeWidth={2}
+            />
+          )
+        }
 
       </svg>
     </div>
