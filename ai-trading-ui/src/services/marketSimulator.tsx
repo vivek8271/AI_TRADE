@@ -19,6 +19,9 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
   // const [drawings, setDrawings] =
   //   useState<Drawing[]>([]);
 
+  const [selectedLineId, setSelectedLineId] =
+  useState<string | null>(null);
+
   const [mousePoint, setMousePoint] =
     useState<Point | null>(null);
 
@@ -30,9 +33,8 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
   ) => {
     // if (activeTool !== "trendline")
     //   return;
-
-    const rect =
-      e.currentTarget.getBoundingClientRect();
+    setSelectedLineId(null);
+    const rect = e.currentTarget.getBoundingClientRect();
 
     const point = {
       x: e.clientX - rect.left,
@@ -223,15 +225,37 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
         }}
       >
         {trendLines.map((line) => (
+          // <line
+          //   key={line.id}
+          //   x1={line.start.x}
+          //   y1={line.start.y}
+          //   x2={line.end.x}
+          //   y2={line.end.y}
+          //   stroke="#FFD700"
+          //   strokeWidth={2}
+          // ></line>
           <line
-            key={line.id}
-            x1={line.start.x}
-            y1={line.start.y}
-            x2={line.end.x}
-            y2={line.end.y}
-            stroke="#FFD700"
-            strokeWidth={2}
-          ></line>
+  key={line.id}
+  x1={line.start.x}
+  y1={line.start.y}
+  x2={line.end.x}
+  y2={line.end.y}
+  stroke={
+    selectedLineId === line.id
+      ? "#00FFFF"
+      : "#FFD700"
+  }
+  strokeWidth={
+    selectedLineId === line.id
+      ? 4
+      : 2
+  }
+  onClick={(e) => {
+    e.stopPropagation();
+
+    setSelectedLineId(line.id);
+  }}
+/>
         ))}
 
         {startPoint && mousePoint &&
