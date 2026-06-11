@@ -1,9 +1,11 @@
+import type { UTCTimestamp } from "lightweight-charts";
+
 type Timeframe = "1ms" | "1s" | "1m" | "5m" | "15m" | "1h" | "4h" | "1d";
 
 export function generateCandles({
   count,
   startPrice = 25000,
-  timeframe = "1ms",
+  timeframe = "1m",
 }: {
   count: number;
   startPrice?: number;
@@ -42,7 +44,10 @@ export function generateCandles({
 
     candles.push({
       // lightweight-charts expects seconds for intraday data
-      time: Math.floor(currentDate.getTime() / 1000),
+    //   time: currentDate
+    // .toISOString()
+    // .split("T")[0],
+      time: Math.floor(currentDate.getTime() / 1000) as UTCTimestamp,
       open,
       high,
       low,

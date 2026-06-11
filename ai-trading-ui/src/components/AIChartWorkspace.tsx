@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import MockCandlestickChart from './MockCandlestickChart';
 import MarketSimulator from '../services/marketSimulator';
-import type { Tool } from './types/tool';
+import type { Timeframe, Tool } from './types/tool';
 
 /* ── Shared floating panel hook ── */
 function useFloatingPanel(defaultW: number, defaultH: number) {
@@ -111,53 +111,35 @@ function ResizeGrip({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => voi
   );
 }
 
-// const tools = [
-//   {
-//     icon: TrendingUp,
-//     tool: "trendline",
-//   },
-//   {
-//     icon: Minus,
-//     tool: "horizontalLine",
-//   },
-//   {
-//     icon: Square,
-//     tool: "rectangle",
-//   },
-//   {
-//     icon: Type,
-//     tool: "text",
-//   },
-// ];
 
 const tools: {
   icon: React.ElementType;
   tool: Tool;
 }[] = [
-  {
-    icon: TrendingUp,
-    tool: "trendline",
-  },
-  {
-    icon: Minus,
-    tool: "horizontalLine",
-  },
-  {
-    icon: Square,
-    tool: "rectangle",
-  },
-  {
-    icon: Type,
-    tool: "text",
-  },
-];
+    {
+      icon: TrendingUp,
+      tool: "trendline",
+    },
+    {
+      icon: Minus,
+      tool: "horizontalLine",
+    },
+    {
+      icon: Square,
+      tool: "rectangle",
+    },
+    {
+      icon: Type,
+      tool: "text",
+    },
+  ];
 
 export default function AIAssistantWidget() {
   /* Chart panel */
   const chart = useFloatingPanel(860, 540);
-  const [timeframe, setTimeframe] = useState('15m');
   const [layout, setLayout] = useState<'single' | 'grid'>('single');
   const [activeTool, setActiveTool] = useState<Tool>('cursor');
+  const [timeframe, setTimeframe] = useState<Timeframe>("1m");
 
   /* Chat panel */
   const chat = useFloatingPanel(360, 420);
@@ -215,14 +197,15 @@ export default function AIAssistantWidget() {
               </Select>
               <div className="h-4 w-px bg-border" />
 
-              {/* <div className="flex items-center gap-0.5 bg-background rounded border border-border p-0.5">
+              <div className="flex items-center gap-0.5 bg-background rounded border border-border p-0.5">
                 {['1m','5m','15m','1H','4H','1D'].map(tf => (
-                  <button key={tf} onClick={() => setTimeframe(tf)}
+                  <button key={tf} onClick={() => setTimeframe(tf as Timeframe)}
                     className={`px-2 py-0.5 text-xs rounded-sm font-medium transition-colors ${timeframe === tf ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                     {tf}
                   </button>
                 ))}
-              </div> */}
+
+              </div>
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-0.5 bg-background rounded border border-border p-0.5">
                 {/* {[TrendingUp, Minus, Square, Divide, Type].map((Icon, i) => (
@@ -260,7 +243,7 @@ export default function AIAssistantWidget() {
           <div className="flex-1 relative overflow-hidden bg-background">
             {layout === 'single' ? (
               // <MockCandlestickChart />
-              <MarketSimulator activeTool={activeTool} />
+              <MarketSimulator activeTool={activeTool}  timeframe={timeframe} />
             ) : (
               <div className="grid grid-cols-2 grid-rows-2 h-full gap-px bg-border">
                 <div className="bg-background"><MockCandlestickChart /></div>

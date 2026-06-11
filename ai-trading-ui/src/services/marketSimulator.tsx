@@ -2,22 +2,17 @@ import { generateCandles } from "../data/candleGenerator";
 import { useEffect, useRef, useState } from "react";
 import { createChart, CandlestickSeries } from "lightweight-charts";
 import type { TrendLine, Point } from "@/components/types/drawing";
-import type { Tool } from "@/components/types/tool";
+import type { Timeframe, Tool } from "@/components/types/tool";
 
 interface Props {
   activeTool: Tool;
+  timeframe: Timeframe;
 }
 
-export default function MarketSimulator({ activeTool }: Props) {
+export default function MarketSimulator({ activeTool, timeframe }: Props) {
 
-  useEffect(() => {
-      console.log(
-        "MarketSimulator received:",
-        activeTool
-      );
-    }, [activeTool]);
   const chartContainerRef = useRef<HTMLDivElement>(null);
- 
+
   const [trendLines, setTrendLines] =
     useState<TrendLine[]>([]);
 
@@ -29,15 +24,7 @@ export default function MarketSimulator({ activeTool }: Props) {
   ) => {
     // if (activeTool !== "trendline")
     //   return;
-    console.log("clicked");
-    // useEffect(() => {
-    //   console.log(
-    //     "MarketSimulator received:",
-    //     activeTool
-    //   );
-    // }, [activeTool]);
-    // if (activeTool !== "trendline")
-    //   return;
+
     const rect =
       e.currentTarget.getBoundingClientRect();
 
@@ -84,6 +71,24 @@ export default function MarketSimulator({ activeTool }: Props) {
         textColor: "#ffffff",
       },
 
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+      },
+      handleScroll: {
+        mouseWheel: true,
+        pressedMouseMove: true,
+        horzTouchDrag: true,
+        vertTouchDrag: true,
+      },
+
+      handleScale: {
+        axisPressedMouseMove: true,
+        mouseWheel: true,
+        pinch: true,
+      },
+
+
       grid: {
         vertLines: {
           color: "#1c1d1f",
@@ -92,12 +97,13 @@ export default function MarketSimulator({ activeTool }: Props) {
           color: "#1c1d1f",
         },
       },
+
     });
 
     const candleSeries = chart.addSeries(CandlestickSeries);
 
     // initial data
-    const candleData = generateCandles({ count: 500, timeframe: "1m" });
+    const candleData = generateCandles({ count: 500, timeframe });
     candleSeries.setData(candleData);
     chart.timeScale().fitContent();
 
@@ -117,11 +123,9 @@ export default function MarketSimulator({ activeTool }: Props) {
     const interval = setInterval(() => {
       tickCount++;
 
-      const move =
-        (Math.random() - 0.5) * 50;
+      const move = (Math.random() - 0.5) * 50;
 
-      const updatedClose =
-        lastCandle.close + move;
+      const updatedClose = lastCandle.close + move;
 
       const updatedCandle = {
         ...lastCandle,
@@ -169,27 +173,27 @@ export default function MarketSimulator({ activeTool }: Props) {
       clearInterval(interval);
       chart.remove();
     };
-  }, []);
+  }, [timeframe]);
 
-  // return <div ref={chartContainerRef} className="w-full h-full" />;
 
   return (
     <div className="relative w-full h-full">
       <div
+
         ref={chartContainerRef}
-        className="w-full h-full"
+        className="w-full h-full cursor-crosshair"
       />
 
       <svg
         className="absolute inset-0 w-full h-full"
         onClick={handleClick}
-      style={{
-        zIndex: 999,
-        pointerEvents:
-          activeTool === "trendline"
-            ? "auto"
-            : "none",
-      }}
+        style={{
+          zIndex: 999,
+          pointerEvents:
+            activeTool === "trendline"
+              ? "auto"
+              : "none",
+        }}
       >
         {trendLines.map((line) => (
           <line
