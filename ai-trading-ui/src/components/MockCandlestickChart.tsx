@@ -4,7 +4,7 @@ import {
   CandlestickSeries,
 } from "lightweight-charts";
 
-import candleData from "./chartData";
+import { candleData } from "./../data/mockData";
 
 export default function MockCandlestickChart() {
   const chartContainerRef =
@@ -13,13 +13,13 @@ export default function MockCandlestickChart() {
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
-    const chart = createChart(
-      chartContainerRef.current,
-      {
-        width: chartContainerRef.current.clientWidth,
-        height: window.innerHeight,
+    const container = chartContainerRef.current;
 
-        layout: {
+    const chart = createChart(container, {
+      width: container.clientWidth,
+      height: container.clientHeight,
+
+      layout: {
           background: {
             color: 'transparent'
           },
@@ -34,22 +34,34 @@ export default function MockCandlestickChart() {
             color: "#1c1d1f",
           },
         },
-      }
-    );
-    chart.timeScale().fitContent();
+    });
 
-    const candleSeries =
-      chart.addSeries(CandlestickSeries);
+    const candleSeries = chart.addSeries(CandlestickSeries);
 
     candleSeries.setData(candleData);
 
-    return () => chart.remove();
+    chart.timeScale().fitContent();
+
+    const resizeObserver =
+      new ResizeObserver(() => {
+        chart.applyOptions({
+          width: container.clientWidth,
+          height: container.clientHeight,
+        });
+      });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+      chart.remove();
+    };
   }, []);
 
   return (
     <div
       ref={chartContainerRef}
-      className="w-full"
+      className="w-full h-full"
     />
   );
 }

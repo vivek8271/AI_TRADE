@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import MockCandlestickChart from './MockCandlestickChart';
+import MarketSimulator from '../services/marketSimulator';
+import type { Timeframe, Tool } from './types/tool';
 
 /* ── Shared floating panel hook ── */
 function useFloatingPanel(defaultW: number, defaultH: number) {
@@ -109,15 +111,18 @@ function ResizeGrip({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => voi
   );
 }
 
-export default function AIChartWorkspace() {
+export default function AIAssistantWidget() {
   /* Chart panel */
   const chart = useFloatingPanel(860, 540);
-  const [timeframe, setTimeframe] = useState('15m');
   const [layout, setLayout] = useState<'single' | 'grid'>('single');
+  const [activeTool, setActiveTool] = useState<Tool>('cursor');
+  const [timeframe, setTimeframe] = useState<Timeframe>("1m");
 
   /* Chat panel */
   const chat = useFloatingPanel(360, 420);
   const [message, setMessage] = useState('');
+
+
 
   /* ── Chart panel ── */
   const chartPanel = (
@@ -128,7 +133,7 @@ export default function AIChartWorkspace() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.94 }}
           transition={{ duration: 0.15 }}
-          className="bg-card border border-border/80 shadow-2xl overflow-hidden flex flex-col"
+          className="bg-card border border-border/80 shadow-2xl overflow-auto flex flex-col"
           style={chart.panelStyle(chart.isMaximized, chart.pos, chart.size)}
         >
           {/* Title / drag bar */}
@@ -168,19 +173,35 @@ export default function AIChartWorkspace() {
                 </SelectContent>
               </Select>
               <div className="h-4 w-px bg-border" />
+
               <div className="flex items-center gap-0.5 bg-background rounded border border-border p-0.5">
                 {['1m','5m','15m','1H','4H','1D'].map(tf => (
-                  <button key={tf} onClick={() => setTimeframe(tf)}
+                  <button key={tf} onClick={() => setTimeframe(tf as Timeframe)}
                     className={`px-2 py-0.5 text-xs rounded-sm font-medium transition-colors ${timeframe === tf ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                     {tf}
                   </button>
                 ))}
+
               </div>
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-0.5 bg-background rounded border border-border p-0.5">
-                {[TrendingUp, Minus, Square, Divide, Type].map((Icon, i) => (
+                {/* {[TrendingUp, Minus, Square, Divide, Type].map((Icon, i) => (
                   <Button key={i} variant="ghost" size="icon" className="w-6 h-6 text-muted-foreground hover:text-foreground">
                     <Icon className="w-3.5 h-3.5" />
+                  </Button>
+                ))} */}
+
+                {tools.map(({ icon: Icon, tool }) => (
+                  <Button
+                    key={tool}
+                    onClick={() => setActiveTool(tool)}
+                    variant={
+                      activeTool === tool
+                        ? "default"
+                        : "ghost"
+                    }
+                  >
+                    <Icon />
                   </Button>
                 ))}
               </div>
@@ -198,14 +219,15 @@ export default function AIChartWorkspace() {
           {/* Chart */}
           <div className="flex-1 relative overflow-hidden bg-background">
             {layout === 'single' ? (
-              <MockCandlestickChart />
+              // <MockCandlestickChart />
+              <MarketSimulator activeTool={activeTool}  timeframe={timeframe} />
             ) : (
               <div className="grid grid-cols-2 grid-rows-2 h-full gap-px bg-border">
                 <div className="bg-background"><MockCandlestickChart /></div>
-                <div className="bg-background"><MockCandlestickChart/></div>
                 <div className="bg-background"><MockCandlestickChart /></div>
                 <div className="bg-background"><MockCandlestickChart /></div>
-    
+                <div className="bg-background"><MockCandlestickChart /></div>
+
               </div>
             )}
           </div>
@@ -289,11 +311,10 @@ export default function AIChartWorkspace() {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.93 }}
           onClick={() => chart.isOpen ? chart.close() : chart.open()}
-          className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors ${
-            chart.isOpen
-              ? 'bg-destructive/80 text-white'
-              : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/40'
-          }`}
+          className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors ${chart.isOpen
+            ? 'bg-destructive/80 text-white'
+            : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/40'
+            }`}
           title="Index Chart"
         >
           {chart.isOpen ? <X className="w-5 h-5" /> : <TerminalSquare className="w-5 h-5" />}
@@ -305,9 +326,8 @@ export default function AIChartWorkspace() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.93 }}
         onClick={() => chat.isOpen ? chat.close() : chat.open(40, 40)}
-        className={`fixed bottom-6 right-6 z-[99998] w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors ${
-          chat.isOpen ? 'bg-destructive/80 text-white' : 'bg-primary text-primary-foreground hover:shadow-primary/30'
-        }`}
+        className={`fixed bottom-6 right-6 z-[99998] w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors ${chat.isOpen ? 'bg-destructive/80 text-white' : 'bg-primary text-primary-foreground hover:shadow-primary/30'
+          }`}
         title="AI Chat"
       >
         <motion.div animate={{ rotate: chat.isOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
