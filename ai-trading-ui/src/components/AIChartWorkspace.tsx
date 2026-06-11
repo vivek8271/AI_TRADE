@@ -112,27 +112,6 @@ function ResizeGrip({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => voi
 }
 
 
-const tools: {
-  icon: React.ElementType;
-  tool: Tool;
-}[] = [
-    {
-      icon: TrendingUp,
-      tool: "trendline",
-    },
-    {
-      icon: Minus,
-      tool: "horizontalLine",
-    },
-    {
-      icon: Square,
-      tool: "rectangle",
-    },
-    {
-      icon: Type,
-      tool: "text",
-    },
-  ];
 
 export default function AIAssistantWidget() {
   /* Chart panel */
