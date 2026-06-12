@@ -6,12 +6,26 @@ import {
   TrendingUp, Minus, Square, Type, Divide, LayoutGrid, Maximize,
   TerminalSquare
 } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import MockCandlestickChart from './MockCandlestickChart';
 import MarketSimulator from '../services/marketSimulator';
 import type { Timeframe, Tool } from './types/tool';
+
+type ToolItem = {
+  tool: Tool;
+  icon: React.FC;
+};
+
+const tools: ToolItem[] = [
+  { tool: 'cursor', icon: Type },
+  { tool: 'trendline', icon: TrendingUp },
+  { tool: 'horizontalLine', icon: Minus },
+  { tool: 'rectangle', icon: Square },
+  { tool: 'text', icon: Type },
+];
 
 /* ── Shared floating panel hook ── */
 function useFloatingPanel(defaultW: number, defaultH: number) {
@@ -110,6 +124,29 @@ function ResizeGrip({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => voi
     </div>
   );
 }
+
+
+const tools: {
+  icon: React.ElementType;
+  tool: Tool;
+}[] = [
+    {
+      icon: TrendingUp,
+      tool: "trendline",
+    },
+    {
+      icon: Minus,
+      tool: "horizontalLine",
+    },
+    {
+      icon: Square,
+      tool: "rectangle",
+    },
+    {
+      icon: Type,
+      tool: "text",
+    },
+  ];
 
 export default function AIAssistantWidget() {
   /* Chart panel */
