@@ -1,6 +1,7 @@
 import { generateCandles } from "../data/candleGenerator";
 import { useEffect, useRef, useState } from "react";
 import { createChart, CandlestickSeries } from "lightweight-charts";
+import type { UTCTimestamp } from "lightweight-charts";
 import type { TrendLine, Point } from "@/components/types/drawing";
 import type { Timeframe, Tool } from "@/components/types/tool";
 
@@ -20,13 +21,26 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
   //   useState<Drawing[]>([]);
 
   const [selectedLineId, setSelectedLineId] =
-  useState<string | null>(null);
+    useState<string | null>(null);
 
   const [mousePoint, setMousePoint] =
     useState<Point | null>(null);
 
   const [startPoint, setStartPoint] =
     useState<Point | null>(null);
+
+  const [draggingLineId, setDraggingLineId] =
+    useState<string | null>(null);
+
+  const [draggingPoint, setDraggingPoint] =
+    useState<"start" | "end" | null>(null);
+
+  const [isDraggingLine, setIsDraggingLine] =
+    useState(false);
+
+  const [lastMousePos, setLastMousePos] =
+    useState<Point | null>(null);
+
 
   const handleClick = (
     e: React.MouseEvent<SVGSVGElement>
@@ -52,17 +66,6 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
       end: point,
       createdBy: "user",
     };
-    // const newLine: TrendLine = {
-    //   id: crypto.randomUUID(),
-    //   type: "trendline",
-
-    //   start: startPoint,
-    //   end: point,
-
-    //   selected: false,
-
-    //   createdBy: "user",
-    // };
 
     setTrendLines((prev) => [
       ...prev,
@@ -73,8 +76,6 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
   };
 
   useEffect(() => {
-
-
     if (!chartContainerRef.current) return;
 
     const container = chartContainerRef.current;
@@ -170,7 +171,7 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
         tickCount = 0;
 
         const newCandle = {
-          time: lastCandle.time + 60,
+          time: (lastCandle.time + 60) as UTCTimestamp,
 
           open: lastCandle.close,
 
@@ -195,6 +196,152 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
   }, [timeframe]);
 
 
+  useEffect(() => {
+    const handleDelete =
+      (e: KeyboardEvent) => {
+
+        if (
+          e.key !== "Delete"
+        )
+          return;
+
+        if (!selectedLineId)
+          return;
+
+        setTrendLines((prev) =>
+          prev.filter(
+            (line) =>
+              line.id !==
+              selectedLineId
+          )
+        );
+
+        setSelectedLineId(null);
+      };
+
+    window.addEventListener(
+      "keydown",
+      handleDelete
+    );
+
+    return () => {
+      window.removeEventListener(
+        "keydown",
+        handleDelete
+      );
+    };
+  }, [selectedLineId]);
+
+  useEffect(() => {
+    const handleMouseUp = () => {
+      setDraggingLineId(null);
+      setDraggingPoint(null);
+    };
+
+    window.addEventListener(
+      "mouseup",
+      handleMouseUp
+    );
+
+    return () =>
+      window.removeEventListener(
+        "mouseup",
+        handleMouseUp
+      );
+  }, []);
+
+  const handleMouseMove = (
+    e: React.MouseEvent<SVGSVGElement>
+  ) => {
+    const rect =
+      e.currentTarget.getBoundingClientRect();
+
+    const x =
+      e.clientX - rect.left;
+
+    const y =
+      e.clientY - rect.top;
+
+    if (
+      draggingLineId &&
+      isDraggingLine &&
+      !draggingPoint &&
+      lastMousePos
+    ) {
+      const dx =
+        x - lastMousePos.x;
+
+      const dy =
+        y - lastMousePos.y;
+
+      setTrendLines((prev) =>
+        prev.map((line) => {
+
+          if (
+            line.id !== draggingLineId
+          )
+            return line;
+
+          return {
+            ...line,
+
+            start: {
+              x: line.start.x + dx,
+              y: line.start.y + dy,
+            },
+
+            end: {
+              x: line.end.x + dx,
+              y: line.end.y + dy,
+            },
+          };
+        })
+      );
+
+      setLastMousePos({
+        x,
+        y,
+      });
+    }
+
+    // if (
+    //   draggingLineId &&
+    //   draggingPoint
+    // ) {
+    //   setTrendLines((prev) =>
+    //     prev.map((line) => {
+
+    //       if (
+    //         line.id !== draggingLineId
+    //       )
+    //         return line;
+
+    //       if (
+    //         draggingPoint === "start"
+    //       ) {
+    //         return {
+    //           ...line,
+
+    //           start: {
+    //             x,
+    //             y,
+    //           },
+    //         };
+    //       }
+
+    //       return {
+    //         ...line,
+
+    //         end: {
+    //           x,
+    //           y,
+    //         },
+    //       };
+    //     })
+    //   );
+    // }
+  };
+
   return (
     <div className="relative w-full h-full">
       <div
@@ -213,50 +360,117 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
               ? "auto"
               : "none",
         }}
+        onMouseMove={handleMouseMove}
 
-        onMouseMove={(e) => {
-          const rect =
-            e.currentTarget.getBoundingClientRect();
+        onMouseUp={() => {
+          setDraggingLineId(null);
 
-          setMousePoint({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-          });
+          setDraggingPoint(null);
+
+          setIsDraggingLine(false);
+
+          setLastMousePos(null);
         }}
       >
         {trendLines.map((line) => (
-          // <line
-          //   key={line.id}
-          //   x1={line.start.x}
-          //   y1={line.start.y}
-          //   x2={line.end.x}
-          //   y2={line.end.y}
-          //   stroke="#FFD700"
-          //   strokeWidth={2}
-          // ></line>
-          <line
-  key={line.id}
-  x1={line.start.x}
-  y1={line.start.y}
-  x2={line.end.x}
-  y2={line.end.y}
-  stroke={
-    selectedLineId === line.id
-      ? "#00FFFF"
-      : "#FFD700"
-  }
-  strokeWidth={
-    selectedLineId === line.id
-      ? 4
-      : 2
-  }
-  onClick={(e) => {
-    e.stopPropagation();
 
-    setSelectedLineId(line.id);
-  }}
-/>
+
+          <g key={line.id}>
+            <line
+              x1={line.start.x}
+              y1={line.start.y}
+              x2={line.end.x}
+              y2={line.end.y}
+              stroke="transparent"
+              strokeWidth={15}
+              onClick={(e) => {
+                e.stopPropagation();
+
+                setSelectedLineId(line.id);
+              }}
+            />
+
+            <line
+              x1={line.start.x}
+              y1={line.start.y}
+              x2={line.end.x}
+              y2={line.end.y}
+              stroke={
+                selectedLineId === line.id
+                  ? "#00FFFF"
+                  : "#FFD700"
+              }
+              strokeWidth={
+                selectedLineId === line.id
+                  ? 4
+                  : 2
+              }
+            />
+
+            <line
+              x1={line.start.x}
+              y1={line.start.y}
+              x2={line.end.x}
+              y2={line.end.y}
+
+              stroke="transparent"
+              strokeWidth={15}
+
+              onMouseDown={(e) => {
+                e.stopPropagation();
+
+                const rect =
+                  e.currentTarget.ownerSVGElement!.getBoundingClientRect();
+
+                setDraggingLineId(line.id);
+
+                setIsDraggingLine(true);
+
+                setLastMousePos({
+                  x: e.clientX - rect.left,
+                  y: e.clientY - rect.top,
+                });
+              }}
+            />
+            {/* // profestionally drawn circles to indicate selected line endpoints */}
+
+            {selectedLineId === line.id && (
+              <>
+                <circle
+                  cx={line.start.x}
+                  cy={line.start.y}
+                  r={8}
+                  fill="#00FFFF"
+                  cursor="pointer"
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+
+                    setDraggingLineId(line.id);
+
+                    setDraggingPoint("start");
+                  }}
+                />
+
+                <circle
+                  cx={line.end.x}
+                  cy={line.end.y}
+                  r={8}
+                  fill="#00FFFF"
+                  cursor="pointer"
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+
+                    setDraggingLineId(line.id);
+
+                    setDraggingPoint("end");
+                  }}
+                />
+              </>
+            )}
+          </g>
+
         ))}
+
 
         {startPoint && mousePoint &&
           activeTool === "trendline" && (
