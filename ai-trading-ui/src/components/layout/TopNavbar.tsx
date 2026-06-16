@@ -60,7 +60,7 @@ export default function TopNavbar() {
           <DropdownMenuContent align="end" className="w-56 font-mono text-sm">
             <div className="flex items-center justify-start gap-2 p-2">
               <div className="flex flex-col space-y-1 leading-none">
-                <p className="font-medium">Alex Morgan</p>
+                <p className="font-medium">Vivek kumar</p>
                 <p className="text-xs text-muted-foreground">Pro Trader</p>
               </div>
             </div>

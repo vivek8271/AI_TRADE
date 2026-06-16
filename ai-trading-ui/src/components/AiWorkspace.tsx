@@ -24,7 +24,7 @@ const MOCK_MESSAGES = [
   { role: 'ai', content: 'I have drawn an ascending trendline on BTC/USD connecting the recent higher lows at $64,200 and $65,800. The trend remains intact.' },
 ];
 
-export default function AITerminal() {
+export default function AiWorkspace() {
   const [input, setInput] = useState('');
 
   return (
@@ -114,9 +114,9 @@ export default function AITerminal() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask AI anything about the markets..." 
-            className="w-full bg-background border-border pr-10"
+            className="w-[80%] bg-background border-border pr-10"
           />
-          <Button size="icon" variant="ghost" className="absolute right-1 top-1 w-8 h-8 text-primary hover:bg-primary/10">
+          <Button size="icon" variant="ghost" className="absolute right-55 top-1/2 transform -translate-y-1/2 w-8 h-8 text-primary hover:bg-primary/10">
             <Send className="w-4 h-4" />
           </Button>
         </div>

@@ -1,10 +1,10 @@
 import React from 'react';
-import AITerminal from '@/components/AITerminal';
+import AiWorkspace from '@/components/AiWorkspace';
 
 export default function Workspace() {
   return (
     <div className="h-full w-full flex flex-col">
-      <AITerminal />
+      <AiWorkspace />
     </div>
   );
 }

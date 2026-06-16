@@ -364,11 +364,8 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
 
         onMouseUp={() => {
           setDraggingLineId(null);
-
           setDraggingPoint(null);
-
           setIsDraggingLine(false);
-
           setLastMousePos(null);
         }}
       >

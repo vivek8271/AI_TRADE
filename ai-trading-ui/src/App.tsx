@@ -13,8 +13,12 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Backtesting from "./pages/Backtesting";
 import CommandPalette from "./components/CommandPalette";
-import AIAssistantWidget from "./components/AIChartWorkspace";
+import AIChartWorkspace from "./components/AIChartWorkspace";
 import { ThemeContext } from "./contexts/ThemeContext";
+import watchlist from "./pages/Watchlist";
+import portfolio from "./pages/Portfolio";
+import terminal from "./pages/Terminal";
+import charts from "./pages/Charts";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +27,10 @@ function Router() {
     <MainLayout>
       <Switch>
         <Route path="/" component={Workspace} />
+        <Route path="/watchlist" component={watchlist} />
+        <Route path="/portfolio" component={portfolio} />
+        <Route path="/terminal" component={terminal} />
+        <Route path="/charts" component={charts} />
         <Route path="/journal" component={Journal} />
         <Route path="/risk" component={Risk} />
         <Route path="/profile" component={Profile} />
@@ -68,7 +76,7 @@ function App() {
           </WouterRouter>
           <Toaster />
           <CommandPalette />
-          <AIAssistantWidget />
+          <AIChartWorkspace />
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
