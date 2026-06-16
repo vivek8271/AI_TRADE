@@ -2,6 +2,7 @@ import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/toaster";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { ThemeContext } from "./contexts/ThemeContext";
 import { useEffect, useState } from "react";
 import React from "react";
 import NotFound from "./pages/not-found";
@@ -14,11 +15,10 @@ import Settings from "./pages/Settings";
 import Backtesting from "./pages/Backtesting";
 import CommandPalette from "./components/CommandPalette";
 import AIChartWorkspace from "./components/AIChartWorkspace";
-import { ThemeContext } from "./contexts/ThemeContext";
-import watchlist from "./pages/Watchlist";
 import portfolio from "./pages/Portfolio";
 import terminal from "./pages/Terminal";
 import charts from "./pages/Charts";
+import WatchlistPanel from "./components/WatchlistPanel";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +27,7 @@ function Router() {
     <MainLayout>
       <Switch>
         <Route path="/" component={Workspace} />
-        <Route path="/watchlist" component={watchlist} />
+        <Route path="/watchlist" component={WatchlistPanel} />
         <Route path="/portfolio" component={portfolio} />
         <Route path="/terminal" component={terminal} />
         <Route path="/charts" component={charts} />
