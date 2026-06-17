@@ -23,10 +23,10 @@ export default function Profile() {
         <div className="w-full md:w-1/3 space-y-6">
           <Card className="glass-panel text-center flex flex-col items-center pt-8 pb-6">
             <Avatar className="w-24 h-24 mb-4 ring-4 ring-primary/20">
-              <AvatarFallback className="bg-primary/20 text-primary text-2xl font-mono">AM</AvatarFallback>
+              <AvatarFallback className="bg-primary/20 text-primary text-2xl font-mono">VK</AvatarFallback>
             </Avatar>
-            <h2 className="text-xl font-bold font-mono">Alex Morgan</h2>
-            <p className="text-sm text-muted-foreground mb-4">trader@alphatech.com</p>
+            <h2 className="text-xl font-bold font-mono">Vivek kumar</h2>
+            <p className="text-sm text-muted-foreground mb-4">trader@vivekkumar.com</p>
             <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold uppercase tracking-wider border border-primary/20">
               Pro Trader Plan
             </div>

@@ -1,67 +1,67 @@
-import { useEffect, useRef } from "react";
-import {
-  createChart,
-  CandlestickSeries,
-} from "lightweight-charts";
+// import { useEffect, useRef } from "react";
+// import {
+//   createChart,
+//   CandlestickSeries,
+// } from "lightweight-charts";
 
-import { candleData } from "./../data/mockData";
+// import { candleData } from "./../data/mockData";
 
-export default function MockCandlestickChart() {
-  const chartContainerRef =
-    useRef<HTMLDivElement>(null);
+// export default function MockCandlestickChart() {
+//   const chartContainerRef =
+//     useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!chartContainerRef.current) return;
+//   useEffect(() => {
+//     if (!chartContainerRef.current) return;
 
-    const container = chartContainerRef.current;
+//     const container = chartContainerRef.current;
 
-    const chart = createChart(container, {
-      width: container.clientWidth,
-      height: container.clientHeight,
+//     const chart = createChart(container, {
+//       width: container.clientWidth,
+//       height: container.clientHeight,
 
-      layout: {
-          background: {
-            color: 'transparent'
-          },
-          textColor: "#ffffff",
-        },
+//       layout: {
+//           background: {
+//             color: 'transparent'
+//           },
+//           textColor: "#ffffff",
+//         },
         
-        grid: {
-          vertLines: {
-            color: "#1c1d1f",
-          },
-          horzLines: {
-            color: "#1c1d1f",
-          },
-        },
-    });
+//         grid: {
+//           vertLines: {
+//             color: "#1c1d1f",
+//           },
+//           horzLines: {
+//             color: "#1c1d1f",
+//           },
+//         },
+//     });
 
-    const candleSeries = chart.addSeries(CandlestickSeries);
+//     const candleSeries = chart.addSeries(CandlestickSeries);
 
-    candleSeries.setData(candleData);
+//     candleSeries.setData(candleData);
 
-    chart.timeScale().fitContent();
+//     chart.timeScale().fitContent();
 
-    const resizeObserver =
-      new ResizeObserver(() => {
-        chart.applyOptions({
-          width: container.clientWidth,
-          height: container.clientHeight,
-        });
-      });
+//     const resizeObserver =
+//       new ResizeObserver(() => {
+//         chart.applyOptions({
+//           width: container.clientWidth,
+//           height: container.clientHeight,
+//         });
+//       });
 
-    resizeObserver.observe(container);
+//     resizeObserver.observe(container);
 
-    return () => {
-      resizeObserver.disconnect();
-      chart.remove();
-    };
-  }, []);
+//     return () => {
+//       resizeObserver.disconnect();
+//       chart.remove();
+//     };
+//   }, []);
 
-  return (
-    <div
-      ref={chartContainerRef}
-      className="w-full h-full"
-    />
-  );
-}
+//   return (
+//     <div
+//       ref={chartContainerRef}
+//       className="w-full h-full"
+//     />
+//   );
+// }
