@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 // import MockCandlestickChart from './MockCandlestickChart';
 import MarketSimulator from '../services/marketSimulator';
-import type { Timeframe, Tool } from './types/tool';
+import type { Timeframe, Tool } from '../DrawingEngine/types/tool';
 
 type ToolItem = {
   tool: Tool;

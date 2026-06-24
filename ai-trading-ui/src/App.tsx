@@ -48,7 +48,7 @@ function Router() {
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined"){
       const stored = localStorage.getItem("theme");
       if (stored) return stored as "light" | "dark";
       return "dark";
