@@ -10,9 +10,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import MockCandlestickChart from './MockCandlestickChart';
+// import MockCandlestickChart from './MockCandlestickChart';
 import MarketSimulator from '../services/marketSimulator';
-import type { Timeframe, Tool } from './types/tool';
+import type { Timeframe, Tool } from '../DrawingEngine/types/tool';
 
 type ToolItem = {
   tool: Tool;
@@ -148,7 +148,7 @@ const tools: {
     },
   ];
 
-export default function AIAssistantWidget() {
+export default function AIChartWorkspace() {
   /* Chart panel */
   const chart = useFloatingPanel(860, 540);
   const [layout, setLayout] = useState<'single' | 'grid'>('single');
@@ -260,10 +260,14 @@ export default function AIAssistantWidget() {
               <MarketSimulator activeTool={activeTool}  timeframe={timeframe} />
             ) : (
               <div className="grid grid-cols-2 grid-rows-2 h-full gap-px bg-border">
+                <MarketSimulator activeTool={activeTool}  timeframe={timeframe} />
+                <MarketSimulator activeTool={activeTool}  timeframe={timeframe} />
+                <MarketSimulator activeTool={activeTool}  timeframe={timeframe} />
+                <MarketSimulator activeTool={activeTool}  timeframe={timeframe} />
+                {/* <div className="bg-background"><MockCandlestickChart /></div>
                 <div className="bg-background"><MockCandlestickChart /></div>
                 <div className="bg-background"><MockCandlestickChart /></div>
-                <div className="bg-background"><MockCandlestickChart /></div>
-                <div className="bg-background"><MockCandlestickChart /></div>
+                <div className="bg-background"><MockCandlestickChart /></div> */}
 
               </div>
             )}

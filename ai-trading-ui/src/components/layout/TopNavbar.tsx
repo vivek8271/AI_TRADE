@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { Link } from 'wouter';
+// import FloatingPanel from '@/components/FloatingChartWidget';
 
 export default function TopNavbar() {
   const { theme, setTheme } = React.useContext(ThemeContext);
@@ -19,7 +20,7 @@ export default function TopNavbar() {
         </div>
         <span className="font-semibold text-foreground hidden md:inline-block tracking-tight">AI Trading Platform</span>
       </div>
-
+      {/* <FloatingPanel /> */}
       <div className="flex-1 max-w-xl mx-4 relative hidden sm:block">
         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <Input 
@@ -27,6 +28,7 @@ export default function TopNavbar() {
           className="w-full bg-background border-border pl-9 h-9 font-mono text-sm"
         />
       </div>
+      
 
       <div className="flex items-center justify-end gap-2 w-1/4">
         <div className="hidden lg:flex items-center gap-2 mr-2 px-3 py-1.5 rounded-full bg-background border border-border text-xs font-mono font-medium">
@@ -60,7 +62,7 @@ export default function TopNavbar() {
           <DropdownMenuContent align="end" className="w-56 font-mono text-sm">
             <div className="flex items-center justify-start gap-2 p-2">
               <div className="flex flex-col space-y-1 leading-none">
-                <p className="font-medium">Alex Morgan</p>
+                <p className="font-medium">Vivek kumar</p>
                 <p className="text-xs text-muted-foreground">Pro Trader</p>
               </div>
             </div>

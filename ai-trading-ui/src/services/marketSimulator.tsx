@@ -2,8 +2,11 @@ import { generateCandles } from "../data/candleGenerator";
 import { useEffect, useRef, useState } from "react";
 import { createChart, CandlestickSeries } from "lightweight-charts";
 import type { UTCTimestamp } from "lightweight-charts";
-import type { TrendLine, Point } from "@/components/types/drawing";
-import type { Timeframe, Tool } from "@/components/types/tool";
+import type { TrendLine, Point } from "@/DrawingEngine/types/drawing";
+import type { Timeframe, Tool } from "@/DrawingEngine/types/tool";
+import DrawingCanvas from "@/DrawingEngine/DrwingCanvas";
+import { useTrendline } from "@/DrawingEngine/hooks/useTrendline";
+
 
 interface Props {
   activeTool: Tool;
@@ -15,65 +18,7 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
-  const [trendLines, setTrendLines] =
-    useState<TrendLine[]>([]);
-  // const [drawings, setDrawings] =
-  //   useState<Drawing[]>([]);
-
-  const [selectedLineId, setSelectedLineId] =
-    useState<string | null>(null);
-
-  const [mousePoint, setMousePoint] =
-    useState<Point | null>(null);
-
-  const [startPoint, setStartPoint] =
-    useState<Point | null>(null);
-
-  const [draggingLineId, setDraggingLineId] =
-    useState<string | null>(null);
-
-  const [draggingPoint, setDraggingPoint] =
-    useState<"start" | "end" | null>(null);
-
-  const [isDraggingLine, setIsDraggingLine] =
-    useState(false);
-
-  const [lastMousePos, setLastMousePos] =
-    useState<Point | null>(null);
-
-
-  const handleClick = (
-    e: React.MouseEvent<SVGSVGElement>
-  ) => {
-    // if (activeTool !== "trendline")
-    //   return;
-    setSelectedLineId(null);
-    const rect = e.currentTarget.getBoundingClientRect();
-
-    const point = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
-
-    if (!startPoint) {
-      setStartPoint(point);
-      return;
-    }
-
-    const newLine: TrendLine = {
-      id: crypto.randomUUID(),
-      start: startPoint,
-      end: point,
-      createdBy: "user",
-    };
-
-    setTrendLines((prev) => [
-      ...prev,
-      newLine,
-    ]);
-
-    setStartPoint(null);
-  };
+  const trendline = useTrendline();
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -196,151 +141,151 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
   }, [timeframe]);
 
 
-  useEffect(() => {
-    const handleDelete =
-      (e: KeyboardEvent) => {
+  // useEffect(() => {
+  //   const handleDelete =
+  //     (e: KeyboardEvent) => {
 
-        if (
-          e.key !== "Delete"
-        )
-          return;
+  //       if (
+  //         e.key !== "Delete"
+  //       )
+  //         return;
 
-        if (!selectedLineId)
-          return;
+  //       if (!selectedLineId)
+  //         return;
 
-        setTrendLines((prev) =>
-          prev.filter(
-            (line) =>
-              line.id !==
-              selectedLineId
-          )
-        );
+  //       setTrendLines((prev) =>
+  //         prev.filter(
+  //           (line) =>
+  //             line.id !==
+  //             selectedLineId
+  //         )
+  //       );
 
-        setSelectedLineId(null);
-      };
+  //       setSelectedLineId(null);
+  //     };
 
-    window.addEventListener(
-      "keydown",
-      handleDelete
-    );
+  //   window.addEventListener(
+  //     "keydown",
+  //     handleDelete
+  //   );
 
-    return () => {
-      window.removeEventListener(
-        "keydown",
-        handleDelete
-      );
-    };
-  }, [selectedLineId]);
+  //   return () => {
+  //     window.removeEventListener(
+  //       "keydown",
+  //       handleDelete
+  //     );
+  //   };
+  // }, [selectedLineId]);
 
-  useEffect(() => {
-    const handleMouseUp = () => {
-      setDraggingLineId(null);
-      setDraggingPoint(null);
-    };
+  // useEffect(() => {
+  //   const handleMouseUp = () => {
+  //     setDraggingLineId(null);
+  //     setDraggingPoint(null);
+  //   };
 
-    window.addEventListener(
-      "mouseup",
-      handleMouseUp
-    );
+  //   window.addEventListener(
+  //     "mouseup",
+  //     handleMouseUp
+  //   );
 
-    return () =>
-      window.removeEventListener(
-        "mouseup",
-        handleMouseUp
-      );
-  }, []);
+  //   return () =>
+  //     window.removeEventListener(
+  //       "mouseup",
+  //       handleMouseUp
+  //     );
+  // }, []);
 
-  const handleMouseMove = (
-    e: React.MouseEvent<SVGSVGElement>
-  ) => {
-    const rect =
-      e.currentTarget.getBoundingClientRect();
+  // const handleMouseMove = (
+  //   e: React.MouseEvent<SVGSVGElement>
+  // ) => {
+  //   const rect =
+  //     e.currentTarget.getBoundingClientRect();
 
-    const x =
-      e.clientX - rect.left;
+  //   const x =
+  //     e.clientX - rect.left;
 
-    const y =
-      e.clientY - rect.top;
+  //   const y =
+  //     e.clientY - rect.top;
 
-    if (
-      draggingLineId &&
-      isDraggingLine &&
-      !draggingPoint &&
-      lastMousePos
-    ) {
-      const dx =
-        x - lastMousePos.x;
+  //   if (
+  //     draggingLineId &&
+  //     isDraggingLine &&
+  //     !draggingPoint &&
+  //     lastMousePos
+  //   ) {
+  //     const dx =
+  //       x - lastMousePos.x;
 
-      const dy =
-        y - lastMousePos.y;
+  //     const dy =
+  //       y - lastMousePos.y;
 
-      setTrendLines((prev) =>
-        prev.map((line) => {
+  //     setTrendLines((prev) =>
+  //       prev.map((line) => {
 
-          if (
-            line.id !== draggingLineId
-          )
-            return line;
+  //         if (
+  //           line.id !== draggingLineId
+  //         )
+  //           return line;
 
-          return {
-            ...line,
+  //         return {
+  //           ...line,
 
-            start: {
-              x: line.start.x + dx,
-              y: line.start.y + dy,
-            },
+  //           start: {
+  //             x: line.start.x + dx,
+  //             y: line.start.y + dy,
+  //           },
 
-            end: {
-              x: line.end.x + dx,
-              y: line.end.y + dy,
-            },
-          };
-        })
-      );
+  //           end: {
+  //             x: line.end.x + dx,
+  //             y: line.end.y + dy,
+  //           },
+  //         };
+  //       })
+  //     );
 
-      setLastMousePos({
-        x,
-        y,
-      });
-    }
+  //     setLastMousePos({
+  //       x,
+  //       y,
+  //     });
+  //   }
 
-    // if (
-    //   draggingLineId &&
-    //   draggingPoint
-    // ) {
-    //   setTrendLines((prev) =>
-    //     prev.map((line) => {
+  //   // if (
+  //   //   draggingLineId &&
+  //   //   draggingPoint
+  //   // ) {
+  //   //   setTrendLines((prev) =>
+  //   //     prev.map((line) => {
 
-    //       if (
-    //         line.id !== draggingLineId
-    //       )
-    //         return line;
+  //   //       if (
+  //   //         line.id !== draggingLineId
+  //   //       )
+  //   //         return line;
 
-    //       if (
-    //         draggingPoint === "start"
-    //       ) {
-    //         return {
-    //           ...line,
+  //   //       if (
+  //   //         draggingPoint === "start"
+  //   //       ) {
+  //   //         return {
+  //   //           ...line,
 
-    //           start: {
-    //             x,
-    //             y,
-    //           },
-    //         };
-    //       }
+  //   //           start: {
+  //   //             x,
+  //   //             y,
+  //   //           },
+  //   //         };
+  //   //       }
 
-    //       return {
-    //         ...line,
+  //   //       return {
+  //   //         ...line,
 
-    //         end: {
-    //           x,
-    //           y,
-    //         },
-    //       };
-    //     })
-    //   );
-    // }
-  };
+  //   //         end: {
+  //   //           x,
+  //   //           y,
+  //   //         },
+  //   //       };
+  //   //     })
+  //   //   );
+  //   // }
+  // };
 
   return (
     <div className="relative w-full h-full">
@@ -350,7 +295,7 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
         className="w-full h-full cursor-crosshair"
       />
 
-      <svg
+      {/* <svg
         className="absolute inset-0 w-full h-full"
         onClick={handleClick}
         style={{
@@ -364,11 +309,8 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
 
         onMouseUp={() => {
           setDraggingLineId(null);
-
           setDraggingPoint(null);
-
           setIsDraggingLine(false);
-
           setLastMousePos(null);
         }}
       >
@@ -431,10 +373,10 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
                   y: e.clientY - rect.top,
                 });
               }}
-            />
-            {/* // profestionally drawn circles to indicate selected line endpoints */}
+            /> */}
+      {/* // profestionally drawn circles to indicate selected line endpoints */}
 
-            {selectedLineId === line.id && (
+      {/* {selectedLineId === line.id && (
               <>
                 <circle
                   cx={line.start.x}
@@ -486,7 +428,35 @@ export default function MarketSimulator({ activeTool, timeframe }: Props) {
           )
         }
 
-      </svg>
+      </svg> */}
+
+      <DrawingCanvas
+
+        trendLines={
+          trendline.trendLines
+        }
+
+        selectedLineId={
+          trendline.selectedLineId
+        }
+
+        handleClick={
+          trendline.onCanvasClick
+        }
+
+        handleMouseMove={
+          trendline.onCanvasMouseMove
+        }
+
+        handleMouseUp={
+          trendline.onCanvasMouseUp
+        }
+
+        activeTool={
+          activeTool
+        }
+      />
+  
     </div>
   )
 }
